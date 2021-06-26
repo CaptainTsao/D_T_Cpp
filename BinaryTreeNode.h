@@ -22,18 +22,18 @@ using namespace std;
 
 template<typename T>
 struct BinaryTreeNode {
-    T element_;
+    T element_{};
     BinaryTreeNode<T> *left_child_, *right_child_;    // left & right subtree
 
-    BinaryTreeNode() : element_(NULL), left_child_(nullptr), right_child_(nullptr) {}
+    BinaryTreeNode() : left_child_(nullptr), right_child_(nullptr) {}
 
     explicit BinaryTreeNode(const T &theElement) :
-      element_(theElement), left_child_(nullptr), right_child_(nullptr) {}
+            element_(theElement), left_child_(nullptr), right_child_(nullptr) {}
 
     BinaryTreeNode(const T &theElement,
                    BinaryTreeNode *theLeftChild,
                    BinaryTreeNode *theRightChild)
-      : element_(theElement), left_child_(theLeftChild), right_child_(theRightChild) {}
+            : element_(theElement), left_child_(theLeftChild), right_child_(theRightChild) {}
 
     ~BinaryTreeNode() = default;
 //    ~BinaryTreeNode() {

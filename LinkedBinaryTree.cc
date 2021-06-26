@@ -45,6 +45,91 @@ void GenerateChain(vector<T> &input, Chain<T> **listNode) {
 
 template<typename T>
 class Solution {
+/* leet code:94 二叉树的中序遍历
+ * 方法1: 递归
+ * 定义inorder(root)表示当前遍历到root节点的答案，那么按照定义，
+ * 我们只要递归调用inorder(root.left)来遍历root节点的左子树，
+ * 然后将root节点的值加入答案，再递归调用inorder(root.right)
+ * 来遍历root节点的右子树即可，递归终止的条件为碰到空节点。
+ * */
+private:
+    void InOrder_94(BinaryTreeNode<T> *root, vector<T> &res) {
+        if (root == nullptr) {
+            return;
+        }
+        InOrder_94(root->left_child_, res);
+        res.push_back(root->element_);
+        InOrder_94(root->right_child_, res);
+    }
+
+public:
+    vector<T> InorderTraversal_94_Recursion(BinaryTreeNode<T> *root) {
+        vector<T> res{};
+        InOrder_94(root, res);
+        return res;
+    }
+
+    /* 方法*/
+    vector<T> InorderTraversal_94_Stack(BinaryTreeNode<T> *root) {
+        vector<T> res{};
+        stack<BinaryTreeNode<T> *> stk;
+        while (root != nullptr || !stk.empty()) {
+            while (root != nullptr) {
+                stk.push(root);
+                root = root->left_child_;
+            }
+            root = stk.top();
+            stk.pop();
+            res.push_back(root->element_);
+            root = root->right_child_;
+        }
+        return res;
+    }
+
+    /* 方法3: Morris 中序遍历
+     * Morris遍历算法是另一种遍历二叉树的方法，
+     * 它能将非递归的中序遍历空间复杂度降为O(1)。
+     * Morris遍历算法整体步骤如下(假设当前遍历到的节点为x):
+     * 1. 如果x无左孩子，先将x的值加入答案数组，再访问x的右孩子，即x=x.right
+     * 2. 如果x有左孩子，则找到x左子树上最右的节点(即左子树中序遍历的最后一个节点，
+     * x在中序遍历中的前驱节点），我们记为 predecessor。根据predecessor的右
+     * 孩子是否为空，进行如下操作。
+     *  - 如果predecessor的右孩子为空，则将其右孩子指向x，然后访问x的左孩子，即x=x.left。
+     *  - 如果predecessor的右孩子不为空，则此时其右孩子指向x，说明我们已经遍历完x
+     *    的左子树，我们将predecessor的右孩子置空，将x的值加入答案数组，然后访问x的
+     *    右孩子，即x=x.right。
+     * 3. 重复上述操作，直至访问完整棵树。
+     * */
+    vector<T> InorderTraversal_94_Morris(BinaryTreeNode<T> *root) {
+        vector<T> res;
+        BinaryTreeNode<T> *predecessor = nullptr;
+
+        while (root != nullptr) {
+            if (root->left_child_ != nullptr) {
+                /* predecessor节点就是当前root结点向左走一步，
+                 * 然后一直向右走至无法走为止 */
+                predecessor = root->left_child_;
+                while (predecessor->right_child_ != nullptr &&
+                       predecessor->right_child_ != root) {
+                    predecessor = predecessor->right_child_;
+                }
+                /* 让predecessor的右指针指向root，继续遍历左子树 */
+                if (predecessor->right_child_ == nullptr) {
+                    predecessor->right_child_ = root;
+                    root = root->left_child_;
+                } else {// 说明左子树已经访问完了，我们继续断开连接
+                    res.push_back(root->element_);
+                    predecessor->right_child_ == nullptr;
+                    root = root->right_child_;
+                }
+            } else {// 如果没有左孩子，直接访问右孩子
+                res.push_back(root->element_);
+                root = root->right_child_;
+            }
+        }
+        return res;
+    }
+
 public:
     bool check(BinaryTreeNode<T> *p, BinaryTreeNode<T> *q) {
         if (!p && !q)
@@ -284,6 +369,10 @@ int main() {
     LinkedBinaryTree<int> tr(node, vec.size());
 
     Solution<int> solution;
+    /* Test LeetCode 94*/
+    std::vector<int> res94{};
+    res94 = solution.InorderTraversal_94_Morris(node);
+//    res94 = solution.InorderTraversal_94_Stack(node);
     bool cmp_res = solution.IsSymmetric1(&tr);
     if (cmp_res)
         cout << "Is symmetric" << endl;
