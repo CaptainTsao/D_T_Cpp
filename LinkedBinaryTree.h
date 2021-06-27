@@ -30,18 +30,21 @@
 
 using namespace std;
 
-template <typename T>
+template<typename T>
 class Solution;
+
+template<typename T>
+class Solution_LevelOrder;
 
 template<typename T>
 class LinkedBinaryTree : public BinaryTree<BinaryTreeNode<T>> {
 public:
     friend Solution<T>;
+    friend Solution_LevelOrder<T>;
 public:
     LinkedBinaryTree() : root_(nullptr), tree_size_(0) {}
 
-    LinkedBinaryTree(BinaryTreeNode<T> *root, int tree_size) :
-      root_(root), tree_size_(tree_size) {}
+    LinkedBinaryTree(BinaryTreeNode<T> *root, int tree_size) : root_(root), tree_size_(tree_size) {}
 
     ~LinkedBinaryTree() {
         erase();
