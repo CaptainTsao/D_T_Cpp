@@ -2,8 +2,8 @@
 // Created by CaoRui on 2021/6/4.
 //
 
-#ifndef DATASTRUCTURE_CHAINNODE_H
-#define DATASTRUCTURE_CHAINNODE_H
+#ifndef CHAINNODE_H
+#define CHAINNODE_H
 
 template<typename T>
 struct ChainNode {
@@ -19,4 +19,4 @@ struct ChainNode {
     ChainNode(const T &theElement, ChainNode<T> *next) : element_(theElement), next_(next) {}
 };
 
-#endif //DATASTRUCTURE_CHAINNODE_H
+#endif //CHAINNODE_H

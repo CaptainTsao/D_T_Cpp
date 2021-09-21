@@ -3,14 +3,14 @@
  *
  *       Filename:  Queue.h
  *
- *    Description:  Abstract class queue 
+ *    Description:  Abstract class queue. All methods are pure virtual functions
  *
  *        Version:  1.0
  *        Created:  2021年05月05日 19时41分24秒
  *       Revision:  none
  *       Compiler:  gcc
  *
- *         Author:  YOUR NAME (), 
+ *         Author:  CAO RUI.
  *   Organization:  
  *
  * =====================================================================================
@@ -33,9 +33,9 @@ public:
     /* return reference to the back element */
     virtual T& back() = 0;
     /* remove the front element */
-    virtual void pop() = 0;
-    /* add theElement at the back of of the queue */
-    virtual void push(const T& theElement) = 0;
+    virtual void pop_front() = 0;
+    /* add theElement at the back of the queue(push_back) */
+    virtual void push_pack(const T& theElement) = 0;
 };
 
 #endif
