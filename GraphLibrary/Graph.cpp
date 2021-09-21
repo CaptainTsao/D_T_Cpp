@@ -130,5 +130,48 @@ std::vector<std::string> Graph::BFS(const std::string &source_node, const std::s
 
 /* BFS: Returns the shortest unweighted path from source_node to target_node */
 std::vector<std::string> Graph::DFS(const std::string &source_node, const std::string &target_node) {
-  return std::vector<std::string>();
+  /* If either Node DNE, return an empty vector */
+  std::vector<std::string> path_vec;
+  if (node_map_.find(source_node) == node_map_.end()) {
+    return path_vec;
+  }
+  if (node_map_.find(target_node) == node_map_.end()) {
+    return path_vec;
+  }
+  std::unordered_map<std::string, std::string> prev_map;
+  prev_map.emplace(source_node, "");
+
+  /* Recursive Kick-Off */
+  DFSHelper(source_node, target_node, prev_map);
+  if (prev_map.find(target_node) == prev_map.end()) {
+    return path_vec;
+  }
+
+  /* use prev_map to get the path from Target back to Source */
+  std::string current_node = target_node;
+  path_vec.push_back(current_node);
+  while (true) {
+    current_node = prev_map[current_node];
+    if (current_node.empty()) {
+      break;
+    }
+    path_vec.push_back(current_node);
+  }
+  std::reverse(path_vec.begin(), path_vec.end());
+  return {};
+}
+void Graph::DFSHelper(const std::string &current_node,
+                      const std::string &target_node,
+                      std::unordered_map<std::string, std::string> &prev_map) {
+  if (current_node == target_node) {
+    return;
+  }
+  std::vector<std::string> neighbors = NeighborNames(current_node);
+  for (const std::string &neighbor: neighbors) {
+    /* If */
+    if (prev_map.find(neighbor) == prev_map.end()) {
+      prev_map.emplace(neighbor, current_node);
+      DFSHelper(neighbor, target_node, prev_map);
+    }
+  }
 }

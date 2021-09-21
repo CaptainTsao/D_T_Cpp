@@ -50,9 +50,11 @@ public:
   bool DeleteNeighbors(std::string name);
 
   /* Core Graph Functions */
-  std::vector<std::string> BFS(const std::string& source_node, const std::string& target_node);
-  std::vector<std::string> DFS(const std::string& source_node, const std::string& target_node);
-
+  std::vector<std::string> BFS(const std::string &source_node, const std::string &target_node);
+  std::vector<std::string> DFS(const std::string &source_node, const std::string &target_node);
+  void DFSHelper(const std::string &current_node,
+                 const std::string &target_node,
+                 std::unordered_map<std::string, std::string> &prev_map);
   /* MST Functions */
   Graph Prims();
   Graph Kruskals();
