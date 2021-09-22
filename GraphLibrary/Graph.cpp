@@ -88,7 +88,7 @@ std::vector<std::string> Graph::BFS(const std::string &source_node, const std::s
   if (node_map_.find(target_node) == node_map_.end()) {
     return path_vec;
   }
-  /* prev_map[X] will contain the Node*/
+  /* prev_map[X] will contain the Node previous to X. Also keeps track of which Nodes have been visited. */
   std::unordered_map<std::string, std::string> prev_map;
   prev_map.emplace(source_node, "");
 
@@ -101,8 +101,8 @@ std::vector<std::string> Graph::BFS(const std::string &source_node, const std::s
     que.pop();
     /* For all neighbors N of current_node */
     std::vector<std::string> neighbor_current = NeighborNames(current_node);
-    for (std::string N: neighbor_current) {
-      if (prev_map.find(N) == prev_map.end()) {
+    for (const std::string &N: neighbor_current) {
+      if (prev_map.find(N) == prev_map.end()) {   /* 如果N不在临近节点中，将其放入que中，*/
         que.push(N);
         prev_map.emplace(N, current_node);
       }
@@ -114,14 +114,14 @@ std::vector<std::string> Graph::BFS(const std::string &source_node, const std::s
     return path_vec;
   }
   /* use prev_map to get the path from target back to source */
-  std::string curr_node = target_node;
-  path_vec.push_back(curr_node);
+  std::string curr = target_node;
+  path_vec.push_back(curr);
   while (true) {
-    curr_node = prev_map[curr_node];
-    if (curr_node.empty()) {
+    curr = prev_map[curr];
+    if (curr.empty()) {
       break;
     }
-    path_vec.push_back(curr_node);
+    path_vec.push_back(curr);
   }
   /* Reverse path_vec so the Node's are in order from Source to Target */
   std::reverse(path_vec.begin(), path_vec.end());
@@ -143,19 +143,20 @@ std::vector<std::string> Graph::DFS(const std::string &source_node, const std::s
 
   /* Recursive Kick-Off */
   DFSHelper(source_node, target_node, prev_map);
+  /* If the target node was not found return an empty vector */
   if (prev_map.find(target_node) == prev_map.end()) {
     return path_vec;
   }
 
   /* use prev_map to get the path from Target back to Source */
-  std::string current_node = target_node;
-  path_vec.push_back(current_node);
+  std::string curr = target_node;
+  path_vec.push_back(curr);
   while (true) {
-    current_node = prev_map[current_node];
-    if (current_node.empty()) {
+    curr = prev_map[curr];
+    if (curr.empty()) {
       break;
     }
-    path_vec.push_back(current_node);
+    path_vec.push_back(curr);
   }
   std::reverse(path_vec.begin(), path_vec.end());
   return {};
@@ -174,4 +175,84 @@ void Graph::DFSHelper(const std::string &current_node,
       DFSHelper(neighbor, target_node, prev_map);
     }
   }
+}
+bool Graph::AddNode(double data, std::string name) {
+  /* If node already exist, return false */
+  if (node_map_.find(name) != node_map_.end()) {
+    return false;
+  }
+
+  /* Else, Dynamically Allocate a new Node and put it in `node_map_` */
+  Node *new_node = new Node(data, name);
+  node_map_.emplace(name, new_node);
+
+  return true;
+}
+void Graph::AddNode(const std::vector<std::string> &nodes) {
+  for (const auto &node: nodes) {
+    AddNode(node);
+  }
+}
+bool Graph::AddNode(const std::string &name) {
+  return AddNode(1, name);
+}
+
+/* GetInfo: Returns a string of all Nodes along with their Edges. */
+std::string Graph::GetInfo() {
+  std::stringstream ss;
+  ss << std::fixed;   /* Prevented scientific-notation */
+  ss << "\n\nGraph Info: " << std::endl;
+  /* For Every Node */
+  for (const auto &iterA: node_map_) {
+    ss << "[" << iterA.first << ": " << iterA.second->GetData() << "] ";
+    /* For Every Neighbor of Node */
+    for (const auto &iterB: *(iterA.second->GetMapPtr())) {
+      ss << "(" << iterB.first << "): ";
+      /* Print Each Edge of Neighbor */
+      for (const auto &weight: iterB.second) {
+        ss << weight << ", ";
+      }
+    }
+    ss << "\n\n";
+  }
+  return ss.str();
+}
+std::vector<std::tuple<std::string, std::string, double>> Graph::GetEdges() const {
+  std::vector<std::tuple<std::string, std::string, double>> edge_vec;
+
+  /* For all Nodes K in node_map */
+  for (const auto &iter: node_map_) {
+    auto K = iter.second;
+    /* For all neighbors N of K */
+    for (const auto &iter1: *(K->GetMapPtr())) {
+      auto tmp_set = iter1.second;
+      /* For all weights from K to N, add it to the edge_vec */
+      for (const auto &i: tmp_set) {
+        std::string node_A = iter.first;
+        std::string node_B = iter1.first;
+        std::tuple<std::string, std::string, double> tmp_tuple(node_A, node_B, i);
+        edge_vec.push_back(tmp_tuple);
+      }
+    }
+  }
+
+  /* If the graph is undirected, post-process to delete duplicate ie(NodeA, NodeB), and */
+  if (!directed_) {
+    std::vector<std::tuple<std::string, std::string, double>> delete_these_edges;
+    for (const auto &edge: edge_vec) {
+      std::string node_A = std::get<0>(edge);
+      std::string node_B = std::get<1>(edge);
+      double weight = std::get<2>(edge);
+
+      std::tuple<std::string, std::string, double> delete_me(node_B, node_A, weight);
+      if (node_A > node_B) {
+        delete_these_edges.push_back(delete_me);
+      }
+    }
+    for (const auto &edge: delete_these_edges) {
+      edge_vec.erase(std::remove(edge_vec.begin(), edge_vec.end(), edge), edge_vec.end());
+    }
+  }
+
+  return edge_vec;
 }

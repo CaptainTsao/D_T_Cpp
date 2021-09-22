@@ -15,7 +15,7 @@ class Node {
   double data_;
   std::string name_;
   /* neighborMap: List of Nodes that this node has an edge to */
-  std::unordered_map<std::string, std::multiset<double>> *neighbor_map_{};
+  std::unordered_map<std::string, std::multiset<double>> *neighbor_map_;
   /* neighborSet: List of Nodes that have an edge to this node */
   std::unordered_set<std::string> neighbor_set_{};
 
@@ -27,7 +27,7 @@ public:
 
   /* Access */
   double GetData() const;
-  std::unordered_map<std::string, std::multiset<double>> *GetMapStr();
+  std::unordered_map<std::string, std::multiset<double>> *GetMapPtr();
   std::unordered_set<std::string> &GetSetRef();
 };
 

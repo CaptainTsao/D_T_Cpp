@@ -23,8 +23,8 @@ public:
 
   /* Trivial */
   bool AddNode(double data, std::string name);
-  bool AddNode(std::string name);
-  void AddNode(std::vector<std::string> nodes);
+  bool AddNode(const std::string &name);
+  void AddNode(const std::vector<std::string> &nodes);
   void AddNode(std::vector<std::pair<double, std::string>> nodes);
   bool AddEdge(std::string from_node, std::string to_node, double weight);
   bool AddEdge(std::string from_node, std::string to_node);
@@ -49,12 +49,22 @@ public:
   std::vector<std::pair<std::string, double>> NeighborDistMax(std::string name);
   bool DeleteNeighbors(std::string name);
 
+  /* Explore Functions */
+  std::unordered_set<std::string> Explore(std::string source_node);
+  void ExploreHelper(std::unordered_set<std::string> &visited, std::string name);
+  std::vector<std::string> ReachableNames(std::string source_node);
+  std::vector<std::string, double> ReachableDists(std::string source_node);
+  bool PathCheck(std::string from_node, std::string to_node);
+
   /* Core Graph Functions */
   std::vector<std::string> BFS(const std::string &source_node, const std::string &target_node);
   std::vector<std::string> DFS(const std::string &source_node, const std::string &target_node);
   void DFSHelper(const std::string &current_node,
                  const std::string &target_node,
                  std::unordered_map<std::string, std::string> &prev_map);
+  std::vector<std::string> Dijktras(std::string source_node, std::string target_node);
+  std::unordered_map<std::string, double> Dijktras(std::string source_node);
+
   /* MST Functions */
   Graph Prims();
   Graph Kruskals();
