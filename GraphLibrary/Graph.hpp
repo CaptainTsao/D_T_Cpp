@@ -10,10 +10,11 @@
 #include "Node.hpp"
 
 class Graph {
-private:
+ private:
   std::unordered_map<std::string, Node *> node_map_;
   bool directed_{true};
-public:
+ public:
+  typedef std::unordered_map<std::string, Node *>::size_type tp_size;
   /* Constructors & Destructor */
   Graph() = default; // Graph are directed by default
   explicit Graph(bool directed);
@@ -44,16 +45,16 @@ public:
   Graph Transpose() const;    /* Create a copy, reverses edges of that copy and returns it. */
 
   /* Neighbor functions */
-  std::vector<std::string> NeighborNames(std::string name);
-  std::vector<std::pair<std::string, double>> NeighborDistMin(std::string name);
-  std::vector<std::pair<std::string, double>> NeighborDistMax(std::string name);
-  bool DeleteNeighbors(std::string name);
+  std::vector<std::string> NeighborNames(const std::string &name);
+  std::vector<std::pair<std::string, double>> NeighborDistMin(const std::string &name);
+  std::vector<std::pair<std::string, double>> NeighborDistMax(const std::string &name);
+  bool DeleteNeighbors(const std::string &name);
 
   /* Explore Functions */
-  std::unordered_set<std::string> Explore(std::string source_node);
-  void ExploreHelper(std::unordered_set<std::string> &visited, std::string name);
-  std::vector<std::string> ReachableNames(std::string source_node);
-  std::vector<std::string, double> ReachableDists(std::string source_node);
+  std::unordered_set<std::string> Explore(const std::string &source_node);
+  void ExploreHelper(std::unordered_set<std::string> &visited, const std::string &name);
+  std::vector<std::string> ReachableNames(const std::string &source_node);
+  std::vector<std::string, double> ReachableDists(const std::string &source_node);
   bool PathCheck(std::string from_node, std::string to_node);
 
   /* Core Graph Functions */
@@ -75,9 +76,9 @@ public:
   /* Return a vector edge, when Edges are represented with a 3-tuple*/
   std::vector<std::tuple<std::string, std::string, double>> GetEdgesAscending() const;
   std::vector<std::tuple<std::string, std::string, double>> GetEdgesDescending() const;
-  int NumNodes();
-  int NumEdges();
-  bool NodeExists(std::string node);
+  tp_size NumNodes();
+  tp_size NumEdges() const;
+  bool NodeExists(const std::string &node);
 
   /* Persistent Graph Functions */
   bool SaveGraph(const std::string &out_put_file_name);
