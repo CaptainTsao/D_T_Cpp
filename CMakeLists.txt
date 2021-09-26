@@ -10,7 +10,7 @@ add_executable(DataStructure
         ArrayQueue.h
         BinaryTree.h
         BinaryTreeNode.h
-        BinaryTreeTraversals.cc
+#        BinaryTreeTraversals.cc
         Booster.h
 #        LinkedBinaryTree.cc
         LinkedBinaryTree.h
@@ -27,4 +27,12 @@ add_executable(DataStructure
 #        dBinarySearchTree.h
         BiTree_LevelOrder.cpp
         DynamicProgramming.cpp
-        maxPriorityQueue.hpp maxHeap.hpp changeLength1D.hpp LinkedQueue.h GraphLibrary/Node.cpp GraphLibrary/Node.hpp GraphLibrary/Graph.cpp GraphLibrary/Graph.hpp)
+        maxPriorityQueue.hpp
+        maxHeap.hpp
+        changeLength1D.hpp
+        LinkedQueue.h
+        GraphLibrary/Node.cpp
+        GraphLibrary/Node.hpp
+        GraphLibrary/Graph.cpp
+        GraphLibrary/Graph.hpp
+        GraphLibrary/Graph_test.cpp)

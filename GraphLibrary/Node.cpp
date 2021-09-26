@@ -16,7 +16,7 @@ void Node::AddNeighbor(const std::string &neighbor_name, double weight) {
   /* Add edge of this 'weight' */
   (*neighbor_map_)[neighbor_name].insert(weight);
 }
-std::unordered_map<std::string, std::multiset<double>> *Node::GetMapStr() {
+std::unordered_map<std::string, std::multiset<double>> *Node::GetMapPtr() {
   return neighbor_map_;
 }
 std::unordered_set<std::string> &Node::GetSetRef() {
